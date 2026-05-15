@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: demo
+
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:8432/otp_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    clean-disabled: false  # ?????? ?? ?????????? ???????? ??
+    clean-on-validation-error: false
+server:
+  port: ${SERVER_PORT:8001}
+
+jwt:
+  private-key-path: classpath:keys/private_key.pem
+  public-key-path: classpath:keys/public_key.pem
+
+  # Access Token: 15 минут (900000 миллисекунд)
+  expiration-time: ${JWT_EXPIRATION_MS:900000}
+
+  # Refresh Token: 7 дней (для полного решения)
+  refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+
+
+logging:
+  level:
+    root: INFO                    # Общий уровень для всего приложения
+    com.example: DEBUG            # Для твоего пакета
+    org.springframework: WARN     # Для Spring фреймворка
+    org.hibernate: WARN          # Для Hibernate
+
+  file:
+    name: logs/application.log    # Запись в файл
+    max-size: 10MB
+    max-history: 30
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+#
+#logging:
+#  level:
+#    com.example.personalfinances: ${LOG_LEVEL:DEBUG}
+#    io.jsonwebtoken: DEBUG
