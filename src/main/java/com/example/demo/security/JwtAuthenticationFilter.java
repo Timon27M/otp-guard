@@ -37,50 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.startsWith("/auth/");
     }
 
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        String requestId = UUID.randomUUID().toString();
-//        MDC.put("requestId", requestId);
-//
-//        log.info("🔐 Начало аутентификации: {} {} | IP: {} | RequestId: {}",
-//                request.getMethod(),
-//                request.getRequestURI(),
-//                request.getRemoteAddr(),
-//                requestId);
-//
-//        Cookie[] cookies = request.getCookies();
-//        String accessToken = CookiesUtil.extractTokenFromCookies(cookies, "access_token");
-//
-//        if (accessToken == null) {
-//            try {
-//                String newAccessToken = jwtService.updateAccessToken(request, response);
-//                authenticateUser(newAccessToken, request);
-//            } catch (Exception e) {
-//                request.setAttribute(
-//                        "authException", new ServletException("Ошибка аутентификации: токена не существует"));
-//                throw new ServletException(
-//                        "Невозможно установить аутентификацию пользователя (токена не существует): ");
-//            }
-//        } else {
-//            if (jwtService.isTokenValid(accessToken)) {
-//                authenticateUser(accessToken, request);
-//            } else {
-//                try {
-//                    String newAccessToken = jwtService.updateAccessToken(request, response);
-//                    authenticateUser(newAccessToken, request);
-//                } catch (Exception e) {
-//                    request.setAttribute(
-//                            "authException",
-//                            new ServletException("Ошибка аутентификации токен просрочен или отозван: "));
-//                    throw new ServletException(
-//                            "Невозможно установить аутентификацию пользователя (токен просрочен или отозван): ");
-//                }
-//            }
-//        }
-//
-//        filterChain.doFilter(request, response);
-//    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

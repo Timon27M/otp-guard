@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -41,6 +43,20 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex) {
     ErrorResponse error = new ErrorResponse(404, ex.getMessage());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ErrorResponse handleAccessDenied(AccessDeniedException e) {
+    return new ErrorResponse(
+            403,
+            "You don't have permission to access this resource. Admin role required."
+    );
+  }
+
+  @ExceptionHandler(AuthorizationDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAuthorizationDenied(AuthorizationDeniedException ex) {
+    ErrorResponse error = new ErrorResponse(403, "Access Denied: Admin role required");
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
   }
 
   @ExceptionHandler(Exception.class)
