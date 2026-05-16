@@ -1,4 +1,4 @@
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     user_id       UUID PRIMARY KEY NOT NULL UNIQUE DEFAULT gen_random_uuid(),
     login         VARCHAR(50)     NOT NULL UNIQUE,
@@ -32,3 +32,16 @@ CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id
 
 CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token_hash
     ON refresh_tokens(token_hash);
+
+
+CREATE TABLE IF NOT EXISTS otp_config (
+    config_id       INTEGER PRIMARY KEY CHECK (config_id = 1),
+    code_length     INTEGER NOT NULL DEFAULT 6 CHECK (code_length BETWEEN 4 AND 10),
+    lifetime_minutes INTEGER NOT NULL DEFAULT 5 CHECK (lifetime_minutes > 0),
+    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_by      UUID REFERENCES users(user_id) ON DELETE SET NULL
+);
+
+INSERT INTO otp_config (config_id, code_length, lifetime_minutes)
+VALUES (1, 6, 5)
+    ON CONFLICT (config_id) DO NOTHING;

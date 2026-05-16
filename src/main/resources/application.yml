@@ -27,7 +27,7 @@ spring:
     baseline-version: 1
     locations: classpath:db/migration
     validate-on-migrate: true
-    clean-disabled: false  # ?????? ?? ?????????? ???????? ??
+    clean-disabled: false
     clean-on-validation-error: false
 server:
   port: ${SERVER_PORT:8001}
@@ -50,16 +50,16 @@ logging:
     org.springframework: WARN     # Для Spring фреймворка
     org.hibernate: WARN          # Для Hibernate
 
-  file:
-    name: logs/application.log    # Запись в файл
-    max-size: 10MB
-    max-history: 30
-
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-
+#  file:
+#    name: logs/application.log    # Запись в файл
+#    max-size: 10MB
+#    max-history: 30
 #
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{requestId}] %-5level %logger{36} - %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+
 #logging:
 #  level:
 #    com.example.personalfinances: ${LOG_LEVEL:DEBUG}
