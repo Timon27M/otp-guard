@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DefaultSuccessResponse {
   private int status;
-  private String message;
+  private String message = "SUCCESS";
   private LocalDateTime timestamp;
 
   public DefaultSuccessResponse(String message) {

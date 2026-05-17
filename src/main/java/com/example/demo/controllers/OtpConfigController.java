@@ -2,7 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.otpConfig.getOtpConfig.DefaultOtpConfigResponse;
 import com.example.demo.entity.OtpConfig;
-import com.example.demo.service.auth.OtpConfigService;
+import com.example.demo.service.OtpConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;

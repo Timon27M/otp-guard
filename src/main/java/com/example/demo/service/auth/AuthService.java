@@ -65,7 +65,7 @@ public class AuthService {
         Cookie accessCookie = new Cookie("access_token", token);
         accessCookie.setPath("/");
         accessCookie.setHttpOnly(true);
-        accessCookie.setMaxAge(1 * 10);
+        accessCookie.setMaxAge(15 * 60);
 
         String refreshToken = jwtService.generateRefreshToken(user);
 

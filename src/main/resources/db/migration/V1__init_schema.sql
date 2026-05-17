@@ -15,7 +15,7 @@ CREATE INDEX idx_users_email ON users (email);
 CREATE INDEX idx_users_login ON users (login);
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (
-    refresh_token_id UUID NOT NULL UNIQUE,
+    refresh_token_id UUID NOT NULL DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     token_hash VARCHAR(64) NOT NULL UNIQUE,
     expires_at TIMESTAMP NOT NULL,
@@ -45,3 +45,29 @@ CREATE TABLE IF NOT EXISTS otp_config (
 INSERT INTO otp_config (config_id, code_length, lifetime_minutes)
 VALUES (1, 6, 5)
     ON CONFLICT (config_id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS operations (
+    operation_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100),
+    user_id UUID NOT NULL,
+
+    CONSTRAINT fk_operation_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS otp_data (
+    otp_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    operation_id UUID NOT NULL,
+    code_hash VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'EXPIRED', 'USED')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    used_at TIMESTAMP WITH TIME ZONE,
+    user_id UUID NOT NULL,
+
+    CONSTRAINT fk_otp_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_otp_operation FOREIGN KEY (operation_id) REFERENCES operations(operation_id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_otp_data_operation ON otp_data(operation_id);
+CREATE INDEX IF NOT EXISTS idx_otp_data_user ON otp_data(user_id);
+CREATE INDEX IF NOT EXISTS idx_otp_data_status ON otp_data(status);

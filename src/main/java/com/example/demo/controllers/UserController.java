@@ -5,14 +5,13 @@ import com.example.demo.dto.user.getAllUsers.GetAllUsersResponse;
 import com.example.demo.entity.user.User;
 import com.example.demo.entity.user.UserRole;
 import com.example.demo.mappers.UserMapper;
-import com.example.demo.service.auth.UserService;
+import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
