@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -63,5 +64,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
     ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+  }
+
+  @ExceptionHandler(ResponseStatusException.class)
+  public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
+    ErrorResponse error = new ErrorResponse(ex.getStatusCode().value(), ex.getReason());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
   }
 }
