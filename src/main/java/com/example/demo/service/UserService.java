@@ -1,8 +1,9 @@
-package com.example.demo.service.auth;
+package com.example.demo.service;
 
 import com.example.demo.entity.user.User;
 import com.example.demo.entity.user.UserRole;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.demo.service.auth;
+package com.example.demo.service;
 
 
 import com.example.demo.entity.OtpConfig;
