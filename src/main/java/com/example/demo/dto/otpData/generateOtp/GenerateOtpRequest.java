@@ -1,4 +1,6 @@
 package com.example.demo.dto.otpData.generateOtp;
 
-public record GenerateOtpRequest(String operationName) {
+import com.example.demo.utils.ChannelEnum;
+
+public record GenerateOtpRequest(String operationName, ChannelEnum channel) {
 }

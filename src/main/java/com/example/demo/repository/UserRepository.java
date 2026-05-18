@@ -24,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Modifying
     @Query("UPDATE User u SET u.role = :role WHERE u.userId = :userId")
     int updateUserRole(@Param("userId") UUID userId, @Param("role") UserRole role);
+
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.login = :login AND u.userId != :currentUserId")
+    int deleteByLogin(@Param("login") String login, @Param("currentUserId") UUID currentUserId);
 }

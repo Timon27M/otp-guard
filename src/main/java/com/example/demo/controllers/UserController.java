@@ -39,4 +39,12 @@ public class UserController {
 
         return new GetAllUsersResponse(customUsers);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete")
+    public DefaultSuccessResponse deleteUser(@RequestParam String login) {
+        userService.deleteUser(login);
+
+        return new DefaultSuccessResponse("Deleted user: " + login);
+    }
 }
