@@ -60,8 +60,7 @@ public class OtpService {
         String recipient = switch (request.channel()) {
             case EMAIL -> user.getEmail();
             case SMS -> user.getPhone();
-            case TELEGRAM -> user.getLogin(); // или telegramChatId, если хранишь
-            case FILE -> "otp_codes.txt";
+            case TELEGRAM -> user.getLogin();
         };
 
         INotificationService notificationService = notificationFactory.getService(request.channel().name());
