@@ -8,6 +8,9 @@ import com.example.demo.entity.OtpData.OtpStatus;
 import com.example.demo.entity.user.User;
 import com.example.demo.repository.OtpRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.notification.INotificationService;
+import com.example.demo.service.notification.NotificationFactory;
+import com.example.demo.utils.ChannelEnum;
 import com.example.demo.utils.CodeGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +35,7 @@ public class OtpService {
     private final OtpConfigService otpConfigService;
     private final PasswordEncoder passwordEncoder;
     private final OtpRepository otpRepository;
+    private final NotificationFactory notificationFactory;
 
     @Transactional
     public UUID generateOtp(GenerateOtpRequest request) {
@@ -52,6 +56,17 @@ public class OtpService {
         String hashCode = passwordEncoder.encode(code);
 
         otpRepository.save(new OtpData(operation.getOperationId(), hashCode, user.getUserId(), config.getLifetimeMinutes()));
+
+        String recipient = switch (request.channel()) {
+            case EMAIL -> user.getEmail();
+            case SMS -> user.getPhone();
+            case TELEGRAM -> user.getLogin(); // или telegramChatId, если хранишь
+//            case FILE -> "otp_codes.txt";
+        };
+
+        INotificationService notificationService = notificationFactory.getService(request.channel().name());
+
+        notificationService.sendCode(recipient, code);
 
         return operation.getOperationId();
     }
