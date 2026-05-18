@@ -61,7 +61,7 @@ public class OtpService {
             case EMAIL -> user.getEmail();
             case SMS -> user.getPhone();
             case TELEGRAM -> user.getLogin(); // или telegramChatId, если хранишь
-//            case FILE -> "otp_codes.txt";
+            case FILE -> "otp_codes.txt";
         };
 
         INotificationService notificationService = notificationFactory.getService(request.channel().name());

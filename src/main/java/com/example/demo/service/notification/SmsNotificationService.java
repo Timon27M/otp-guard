@@ -1,0 +1,96 @@
+package com.example.demo.service.notification;
+
+import lombok.extern.slf4j.Slf4j;
+import org.jsmpp.bean.*;
+import org.jsmpp.session.BindParameter;
+import org.jsmpp.session.SMPPSession;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
+
+@Slf4j
+@Service("smsNotificationService")
+public class SmsNotificationService implements INotificationService {
+
+    private final String host;
+    private final int port;
+    private final String systemId;
+    private final String password;
+    private final String systemType;
+    private final String sourceAddress;
+
+    public SmsNotificationService() {
+        Properties config = loadConfig();
+        this.host = config.getProperty("smpp.host");
+        this.port = Integer.parseInt(config.getProperty("smpp.port"));
+        this.systemId = config.getProperty("smpp.system_id");
+        this.password = config.getProperty("smpp.password");
+        this.systemType = config.getProperty("smpp.system_type");
+        this.sourceAddress = config.getProperty("smpp.source_addr");
+    }
+
+    @Override
+    public void sendCode(String destination, String code) {
+        SMPPSession session = new SMPPSession();
+
+        try {
+            BindParameter bindParameter = new BindParameter(
+                    BindType.BIND_TX,
+                    systemId,
+                    password,
+                    systemType,
+                    TypeOfNumber.UNKNOWN,
+                    NumberingPlanIndicator.UNKNOWN,
+                    sourceAddress
+            );
+
+            session.connectAndBind(host, port, bindParameter);
+
+            session.submitShortMessage(
+                    systemType,
+                    TypeOfNumber.UNKNOWN,
+                    NumberingPlanIndicator.UNKNOWN,
+                    sourceAddress,
+                    TypeOfNumber.UNKNOWN,
+                    NumberingPlanIndicator.UNKNOWN,
+                    destination,
+                    new ESMClass(),
+                    (byte) 0,
+                    (byte) 1,
+                    null,
+                    null,
+                    new RegisteredDelivery(SMSCDeliveryReceipt.DEFAULT),
+                    (byte) 0,
+                    new GeneralDataCoding(Alphabet.ALPHA_DEFAULT),
+                    (byte) 0,
+                    ("Your verification code is: " + code).getBytes(StandardCharsets.UTF_8)
+            );
+
+            log.info("📱 SMS sent via SMPP to {}: code: {}", destination, code);
+        } catch (Exception e) {
+            log.error("Failed to send SMS to {}: {}", destination, e.getMessage());
+            throw new RuntimeException("Failed to send SMS", e);
+        } finally {
+            session.unbindAndClose();
+        }
+    }
+
+    @Override
+    public String getChannelName() {
+        return "SMS";
+    }
+
+    private Properties loadConfig() {
+        try (InputStream input = SmsNotificationService.class.getClassLoader()
+                .getResourceAsStream("sms.properties")) {
+            Properties props = new Properties();
+            props.load(input);
+            return props;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load SMS configuration", e);
+        }
+    }
+}
