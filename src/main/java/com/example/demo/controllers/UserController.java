@@ -23,19 +23,22 @@ public class UserController {
 
     @PatchMapping("/update-role")
     public DefaultSuccessResponse updateUserRole(@RequestParam String role, HttpServletResponse response) {
-        log.info("update user role: {}", role);
+        log.info("Запрос на обновление пользователя выполняется...");
         String res = userService.updateRoleUser(UserRole.valueOf(role), response);
 
+        log.info("Запрос выполнился успешно!");
         return new DefaultSuccessResponse(res);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public GetAllUsersResponse getAllUsers() {
+        log.info("Запрос на получение всех пользователей выполняется...");
         List<User> users = userService.getAllUsers();
         List<GetAllUsersResponse.CustomUser> customUsers = users.stream()
                 .map(UserMapper::mapToCustomUser)
                 .toList();
+        log.info("Запрос выполнился успешно!");
 
         return new GetAllUsersResponse(customUsers);
     }
@@ -43,7 +46,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
     public DefaultSuccessResponse deleteUser(@RequestParam String login) {
+        log.info("Запрос на удаление пользователя выполняется...");
         userService.deleteUser(login);
+        log.info("Запрос выполнился успешно!");
 
         return new DefaultSuccessResponse("Deleted user: " + login);
     }
