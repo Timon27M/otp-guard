@@ -20,7 +20,9 @@ public class OtpConfigController {
 
     @GetMapping
     public DefaultOtpConfigResponse getOtpConfig() {
+        log.info("Запрос на получение config выполняется...");
         OtpConfig config = otpConfigService.getConfig();
+        log.info("Запрос выполнился успешно!");
 
         return new DefaultOtpConfigResponse(
                 "SUCCESS",
@@ -35,7 +37,9 @@ public class OtpConfigController {
     @Modifying
     @PatchMapping("/update/code-length")
     public DefaultOtpConfigResponse updateCodeLength(@RequestParam Integer codeLength) {
+        log.info("Запрос на обновление длины кода выполняется...");
         OtpConfig config = otpConfigService.updateCodeLength(codeLength);
+        log.info("Запрос выполнился успешно!");
 
         return new DefaultOtpConfigResponse(
                 "SUCCESS",
@@ -50,7 +54,9 @@ public class OtpConfigController {
     @Modifying
     @PatchMapping("/update/lifetime-minutes")
     public DefaultOtpConfigResponse updateLifetimeMinutes(@RequestParam Integer lifetimeMinutes) {
+        log.info("Запрос на обновление времени жизни кода выполняется...");
         OtpConfig config = otpConfigService.updateLifetimeMinutes(lifetimeMinutes);
+        log.info("Запрос выполнился успешно!");
 
         return new DefaultOtpConfigResponse(
                 "SUCCESS",
